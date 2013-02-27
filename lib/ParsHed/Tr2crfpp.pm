@@ -29,7 +29,6 @@ my $bigramFile = $ParsHed::Config::bigramFile;
 $bigramFile = "$FindBin::Bin/../$bigramFile";
 
 my $crf_test = $ParsHed::Config::crf_test;
-$crf_test = "$FindBin::Bin/../$crf_test";
 
 my $modelFile = $ParsHed::Config::modelFile;
 $modelFile = "$FindBin::Bin/../$modelFile";

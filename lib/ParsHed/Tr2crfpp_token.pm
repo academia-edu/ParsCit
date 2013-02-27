@@ -23,7 +23,6 @@ my $dictFile = $ParsHed::Config::dictFile;
 $dictFile = "$FindBin::Bin/../$dictFile";
 
 my $crf_test = $ParsHed::Config::crf_test;
-$crf_test = "$FindBin::Bin/../$crf_test";
 
 my $modelFile = $ParsHed::Config::oldModelFile;
 $modelFile = "$FindBin::Bin/../$modelFile";
