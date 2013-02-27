@@ -14,7 +14,8 @@ $funcFile		= "resources/sectLabel/funcWord";
 $crf_test = "$ENV{'CRFPP_HOME'}/bin/crf_test";
 
 $modelFile		= "resources/sectLabel/sectLabel.model";
-$modelXmlFile	= "resources/sectLabel/sectLabel.modelXml.v2";
+#$modelXmlFile	= "resources/sectLabel/sectLabel.modelXml.v2";
+$modelXmlFile = "unsupported for now to save space";
 $configFile		= "resources/sectLabel/sectLabel.config";
 $configXmlFile	= "resources/sectLabel/sectLabel.configXml";
 
