@@ -13,7 +13,8 @@ $bigramFile		= "resources/parsHed/bigram";
 $crf_test   = "$ENV{'CRFPP_HOME'}/bin/crf_test";
 
 $modelFile		= "resources/parsHed/parsHed.model";
-$oldModelFile	= "resources/parsHed/archive/parsHed.090316.model";
+#$oldModelFile	= "resources/parsHed/archive/parsHed.090316.model";
+$oldModelFile = "unsupported for space reasons";
 
 # Flags for different types of CRF features for line-level training
 $isFullFormToken	= 1;
