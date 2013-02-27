@@ -10,8 +10,8 @@ $0 =~ /([^\/]+)$/; my $progname = $1;
 my $outputVersion = "1.0";
 my $parscitHome = "/home/wing.nus/services/parscit/tools/";
 my $tr2crfppLoc = "$parscitHome/bin/tr2crfpp.pl";
-my $crf_learnLoc = "$parscitHome/crfpp/crf_learn";
-my $crf_testLoc = "$parscitHome/crfpp/crf_test";
+my $crf_learnLoc = "$ENV{'CRFPP_HOME'}/bin/crf_learn";
+my $crf_testLoc = "$ENV{'CRFPP_HOME'}/bin/crf_test";
 my $conllevalLoc = "$parscitHome/bin/conlleval.pl";
 my $crfTemplateLoc = "$parscitHome/crfpp/traindata/parsCit.template";
 ### END user customizable section
