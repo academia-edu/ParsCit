@@ -41,10 +41,7 @@ use File::Spec;
 use File::Basename;
 
 # Local libraries
-use Omni::Omnidoc;
-use Omni::Traversal;
 use ParsCit::Controller;
-use SectLabel::AAMatching;
 	
 # USER customizable section
 my $tmpfile	.= $0; 
@@ -195,113 +192,17 @@ if (defined $opt_e && $opt_e ne "")
 }
 
 my $doc			= undef;
-my $text_file	= undef;
-# Extracting text from Omnipage XML output
-if ($is_xml_input)
-{
-	$text_file	= "/tmp/" . NewTmpFile();
-	my $cmd		= $FindBin::Bin . "/sectLabel/processOmniXMLv2.pl -q -in $in -out $text_file -decode";
-	system($cmd);
-
-	###
-	# Huydhn: input is xml from Omnipage
-	###
-	if (! open(IN, "<:utf8", $in)) { return (-1, "Could not open xml file " . $in . ": " . $!); }
-	my $xml = do { local $/; <IN> };
-	close IN;
-
-	###
-	# Huydhn
-	# NOTE: the omnipage xml is not well constructed (concatenated multiple xml files).
-	# This merged xml need to be fixed first before pass it to xml processing libraries, e.g. xml::twig
-	###
-	# Convert to Unix format
-	$xml =~ s/\r//g;
-	# Remove <?xml version="1.0" encoding="UTF-8"?>
-	$xml =~ s/<\?xml.+?>\n//g;
-	# Remove <!--XML document generated using OCR technology from ScanSoft, Inc.-->
-	$xml =~ s/<\!\-\-XML.+?>\n//g;
-	# Declaration and root
-	$xml = "<?xml version=\"1.0\"?>" . "\n" . "<root>" . "\n" . $xml . "\n" . "</root>";
-
-	# New document
-	$doc = new Omni::Omnidoc();
-	$doc->set_raw($xml);
-} 
-else 
-{
-	$text_file	= $in;
-}
+my $text_file	= $in;
 
 # SECTLABEL
 if (($mode & $SECTLABEL) == $SECTLABEL)
 { 
 	my $sect_label_input = $text_file;
 
-	# Get XML features and append to $text_file
-	if ($is_xml_input)
-	{
-		my $cmd	= $FindBin::Bin . "/sectLabel/processOmniXMLv3.pl -q -in $in -out $text_file.feature -decode";
-		system($cmd);
+  my ($sl_xml, $aut_lines, $aff_lines) = SectLabel($sect_label_input, $is_xml_input, 0);
 
-		my $address_file = $text_file . ".feature" . ".address";
-		if (! open(IN, "<:utf8", $address_file)) { return (-1, "Could not open address file " . $address_file . ": " . $!); }
-		
-		my @omni_address = ();
-		# Read the address file provided by process OmniXML script
-		while (<IN>)
-		{
-			chomp;
-			# Save and split the line
-			my $line	= $_;
-			my @element	= split(/\s+/, $line);
-
-			my %addr		= ();
-			# Address
-			$addr{ 'L1' }	= $element[ 0 ];
-			$addr{ 'L2' }	= $element[ 1 ];
-			$addr{ 'L3' }	= $element[ 2 ];
-			$addr{ 'L4' }	= $element[ 3 ];
-
-			# Save the address
-			push @omni_address, { %addr };
-		}
-		close IN;
-		unlink($address_file);
-
-		$sect_label_input .= ".feature";
-		my ($sl_xml, $aut_lines, $aff_lines) = SectLabel($sect_label_input, $is_xml_input, 0);
-
-		# Remove first line <?xml/>
-		$rxml .= RemoveTopLines($sl_xml, 1) . "\n";
-	
-		# Only run author - affiliation if "something" is provided
-		if ($opt_a)
-		{
-			my @aut_addrs = ();
-			my @aff_addrs = ();
-			# Address of author section	
-			for my $lindex (@{ $aut_lines }) { push @aut_addrs, $omni_address[ $lindex ]; }
-			# Address of affiliation section
-			for my $lindex (@{ $aff_lines }) { push @aff_addrs, $omni_address[ $lindex ]; }
-
-			# The tarpit
-			my $aa_xml = SectLabel::AAMatching::AAMatching($doc, \@aut_addrs, \@aff_addrs);
-		
-			# Author-Affiliation Matching result
-			$rxml .= $aa_xml . "\n";
-		}
-
-		# Remove XML feature file
-		unlink($sect_label_input);
-	}
-	else
-	{
-		my ($sl_xml, $aut_lines, $aff_lines) = SectLabel($sect_label_input, $is_xml_input, 0);
-
-		# Remove first line <?xml/>
-		$rxml .= RemoveTopLines($sl_xml, 1) . "\n";
-	}
+  # Remove first line <?xml/>
+  $rxml .= RemoveTopLines($sl_xml, 1) . "\n";
 }
 
 # PARSHED
@@ -318,66 +219,13 @@ if (($mode & $PARSHED) == $PARSHED)
 # PARSCIT
 if (($mode & $PARSCIT) == $PARSCIT)
 {
-	if ($is_xml_input)
-	{
-		my $cmd	= $FindBin::Bin . "/sectLabel/processOmniXMLv3.pl -q -in $in -out $text_file.feature -decode";
-		system($cmd);
+  my $pc_xml = ParsCit::Controller::ExtractCitations($text_file, $in, $is_xml_input);
 
-		my $address_file = $text_file . ".feature" . ".address";
-		if (! open(IN, "<:utf8", $address_file)) { return (-1, "Could not open address file " . $address_file . ": " . $!); }
-		
-		my @omni_address = ();
-		# Read the address file provided by process OmniXML script
-		while (<IN>)
-		{
-			chomp;
-			# Save and split the line
-			my $line	= $_;
-			my @element	= split(/\s+/, $line);
+  # Remove first line <?xml/> 
+  $rxml .= RemoveTopLines($$pc_xml, 1) . "\n";
 
-			my %addr		= ();
-			# Address
-			$addr{ 'L1' }	= $element[ 0 ];
-			$addr{ 'L2' }	= $element[ 1 ];
-			$addr{ 'L3' }	= $element[ 2 ];
-			$addr{ 'L4' }	= $element[ 3 ];
-
-			# Save the address
-			push @omni_address, { %addr };
-		}
-		close IN;
-		unlink($address_file);
-
-		my $sect_label_input = $text_file . ".feature";
-		# Output of sectlabel becomes input for parscit
-		my ($all_text, $cit_lines) = SectLabel($sect_label_input, $is_xml_input, 1);	
-		# Remove XML feature file
-		unlink($sect_label_input);
-
-		my @cit_addrs = ();
-		# Address of reference section	
-		for my $lindex (@{ $cit_lines }) { push @cit_addrs, $omni_address[ $lindex ]; }
-
-		my $pc_xml = undef;
-		# Huydhn: add xml features to parscit in case of unmarked reference
-		$pc_xml = ParsCit::Controller::ExtractCitations2(\$all_text, $cit_lines, $is_xml_input, $doc, \@cit_addrs);
-
-		# Remove first line <?xml/> 
-		$rxml .= RemoveTopLines($$pc_xml, 1) . "\n";
-
-		# Thang v100901: call to BiblioScript
-		if (scalar(@export_types) != 0) { BiblioScript(\@export_types, $$pc_xml, $out); }
-	}
-	else
-	{
-		my $pc_xml = ParsCit::Controller::ExtractCitations($text_file, $in, $is_xml_input);
-	
-		# Remove first line <?xml/> 
-		$rxml .= RemoveTopLines($$pc_xml, 1) . "\n";
-
-		# Thang v100901: call to BiblioScript
-		if (scalar(@export_types) != 0) { BiblioScript(\@export_types, $$pc_xml, $out); }
-	}
+  # Thang v100901: call to BiblioScript
+  if (scalar(@export_types) != 0) { BiblioScript(\@export_types, $$pc_xml, $out); }
 }
 
 $rxml .= "</algorithms>";

@@ -11,7 +11,6 @@ package ParsCit::PreProcess;
 use utf8;
 use strict;
 
-use Omni::Config;
 use ParsCit::Citation;
 
 my %marker_types =	(	'SQUARE'		=> '\\[.+?\\]',
@@ -21,9 +20,6 @@ my %marker_types =	(	'SQUARE'		=> '\\[.+?\\]',
 						#'NAKEDNUM' 	=> '\\d{1,3}',		# Modified by Artemy Kolchinsky (v090625)
 						#'NAKEDNUMDOT'	=> '\\d{1,3}\\.'	# Modified by Artemy Kolchinsky (v090625)
 					);
-
-# Omnilib configuration: object name
-my $obj_list = $Omni::Config::obj_list;
 
 ###
 # Huydhn: similar to findCitationText, find the citation portion using regular expression.

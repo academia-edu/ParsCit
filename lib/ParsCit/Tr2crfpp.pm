@@ -15,7 +15,6 @@ use strict 'vars';
 use FindBin;
 use Encode ();
 
-use Omni::Config;
 use ParsCit::Config;
 
 ### USER customizable section
@@ -38,8 +37,6 @@ $split_model_file		= "$FindBin::Bin/../$split_model_file";
 # Huydhn: don't know its function
 ###
 my %dict 	 = ();
-# Omnilib configuration: object name
-my $obj_list = $Omni::Config::obj_list;
 
 ###
 # Huydhn: prepare data for trfpp, segmenting unmarked reference
@@ -124,7 +121,7 @@ sub PrepDataUnmarked
 						# Trim line
 						$ln	=~ s/^\s+|\s+$//g;
 						# Skip blank lines
-						if (($ln =~ m/^\s*$/) || ($lines->[ $t ]->get_name() ne $obj_list->{ 'OMNILINE' }))
+						if (($ln =~ m/^\s*$/))
 						{
 							$addr_index++;
 							next; 
@@ -355,7 +352,6 @@ sub PrepDataUnmarked
 					# XML features
 					# Bullet
 					my $bullet = undef;
-					if ($lines->[ $t ]->get_name() eq $obj_list->{ 'OMNILINE' }) { $bullet = $lines->[ $t ]->get_bullet(); }
 					if ((defined $bullet) && ($bullet eq 'true'))
 					{
 						push @feats, 'xmlBullet_yes';	
@@ -368,7 +364,6 @@ sub PrepDataUnmarked
 
 					# First word format: bold, italic, font size
 					my $xml_runs = undef;
-					if (($lines->[ $t ]->get_name() eq $obj_list->{ 'OMNILINE' })) { $xml_runs = $lines->[ $t ]->get_objs_ref(); }
 			
 					# First word format: bold
 					my $bold = undef;
@@ -415,7 +410,6 @@ sub PrepDataUnmarked
 
 					# First word format: starting point, left alignment
 					my $start_point = undef;
-					if (($lines->[ $t ]->get_name() eq $obj_list->{ 'OMNILINE' })) { $start_point = $lines->[ $t ]->get_left_pos(); }
 					if ((defined $start_point) && ($start_point > $avg_start_point * $start_upper_ratio))
 					{
 						push @feats, 'xmlBeginLine_right';

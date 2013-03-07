@@ -21,8 +21,6 @@ use ParsCit::Tr2crfpp;
 use ParsCit::PreProcess;
 use ParsCit::PostProcess;
 use ParsCit::CitationContext;
-# Omnipage libraries
-use Omni::Omnidoc;
 # Dependencies
 use CSXUtil::SafeText qw(cleanXML);
 
@@ -228,62 +226,6 @@ sub ExtractCitationsImpl
 	# Reference to an array of single reference
 	my $rraw_citations = undef;
 
-	# Find and separate reference
-	if ($is_xml)
-	{
-		###
-		# Huydhn: input is xml from Omnipage
-		###
-		if (! open(IN, "<:utf8", $orgfile)) { return (-1, "Could not open xml file " . $orgfile . ": " . $!); }
-		my $xml = do { local $/; <IN> };
-		close IN;
-
-		###
-		# Huydhn
-		# NOTE: the omnipage xml is not well constructed (concatenated multiple xml files).
-		# This merged xml need to be fixed first before pass it to xml processing libraries, e.g. xml::twig
-		###
-		# Convert to Unix format
-		$xml =~ s/\r//g;
-		# Remove <?xml version="1.0" encoding="UTF-8"?>
-		$xml =~ s/<\?xml.+?>\n//g;
-		# Remove <!--XML document generated using OCR technology from ScanSoft, Inc.-->
-		$xml =~ s/<\!\-\-XML.+?>\n//g;
-		# Declaration and root
-		$xml = "<?xml version=\"1.0\"?>" . "\n" . "<root>" . "\n" . $xml . "\n" . "</root>";
-
-		# New document
-		my $doc = new Omni::Omnidoc();
-		$doc->set_raw($xml);
-		
-		# Extract the reference portion from the XML
-		my ($start_ref, $end_ref, $rcite_text_from_xml, $rcit_addrs) = ParsCit::PreProcess::FindCitationTextXML($doc);
-
-		# Extract the reference portion from the text. 
-		# TODO: NEED TO BE REMOVED FROM HERE
-		my $content = $doc->get_content();
-		($rcite_text, $rnorm_body_text, $rbody_text) = ParsCit::PreProcess::FindCitationText(\$content, \@pos_array);
-
-		my @norm_body_tokens	= split(/\s+/, $$rnorm_body_text);
-    	my @body_tokens			= split(/\s+/, $$rbody_text);
-
-		my $size	= scalar(@norm_body_tokens);
-    	my $size1	= scalar(@pos_array);
-
-	    if($size != $size1) { die "ParsCit::Controller::extractCitationsImpl: normBodyText size $size != posArray size $size1\n"; }
-		# TODO: TO HERE
-		
-		# Filename initialization
-    	if ($bwrite_split > 0) { ($citefile, $bodyfile) = WriteSplit($textfile, $rcite_text_from_xml, $rbody_text); }
-
-		# Prepare to split unmarked reference portion
-		my $tmp_file = ParsCit::Tr2crfpp::PrepDataUnmarked($doc, $rcit_addrs);
-
-		# Extract citations from citation text
-	    $rraw_citations	= ParsCit::PreProcess::SegmentCitationsXML($rcite_text_from_xml, $tmp_file);
-	}
-	else
-	{
 		if (! open(IN, "<:utf8", $textfile)) { return (-1, "Could not open text file " . $textfile . ": " . $!); }
 		my $text = do { local $/; <IN> };
 		close IN;
@@ -309,7 +251,6 @@ sub ExtractCitationsImpl
 
 		# Extract citations from citation text
 	    $rraw_citations	= ParsCit::PreProcess::SegmentCitations($rcite_text);
-	}
 
 	my @citations		= ();
     my @valid_citations	= ();
