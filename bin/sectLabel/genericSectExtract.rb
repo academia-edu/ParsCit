@@ -9,6 +9,8 @@ pwd = File.dirname(__FILE__)
 @DATA   = "#{pwd}/../../resources/sectLabel/"
 @TEST_DIR = "/tmp/"
 
+require "#{@SRC}/forceUtf8"
+
 name  = "#{Time.now.to_i}-#{Process.pid}"
 
 cmd = "ruby #{@SRC}/extractFeature.rb #{ARGV[0]} > #{@TEST_DIR}/#{name}.test"
@@ -27,7 +29,7 @@ end
 
 f = File.open("#{@TEST_DIR}/#{name}.out")
 while !f.eof do
-	str = f.gets.chomp.strip
+	str = force_utf8!(f.gets).chomp.strip
 	if str != ""
 		l = str.split(" ")
 		output = l.at(l.length-1)
