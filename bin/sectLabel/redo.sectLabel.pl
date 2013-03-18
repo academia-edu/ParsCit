@@ -27,8 +27,9 @@ my $outputVersion = "1.0";
 
 my $tr2crfppLoc = "$path/tr2crfpp.pl";
 my $keywordLoc = "$path/keywordGen.pl"; #new model
-my $crf_learnLoc = "$ENV{'CRFPP_HOME'}/bin/crf_learn";
-my $crf_testLoc = "$ENV{'CRFPP_HOME'}/bin/crf_test";
+my $crfpp = $ENV{'CRFPP_HOME'} ? "$ENV{'CRFPP_HOME'}/bin" : "$path/../../crfpp";
+my $crf_learnLoc = "$crfpp/crf_learn";
+my $crf_testLoc = "$crfpp/crf_test";
 my $conllevalLoc = "$path/../conlleval.pl";
 ### END user customizable section
 

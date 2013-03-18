@@ -4,7 +4,7 @@ require 'find'
 
 pwd = File.dirname(__FILE__)
 
-@CRFPP  = "#{ENV['CRFPP_HOME']}/bin"
+@CRFPP  = ENV['CRFPP_HOME'] ? "#{ENV['CRFPP_HOME']}/bin" : "#{pwd}/../../../crfpp"
 @RESOURCES   = "#{pwd}/../../../crfpp/traindata/"
 @TEST_DIR = "#{pwd}/run"
 @CONLLEVAL = "#{pwd}/../../conlleval.pl"

@@ -5,7 +5,7 @@ require 'find'
 
 pwd = File.dirname(__FILE__)
 
-@CRFPP  = "#{ENV['CRFPP_HOME']}/bin"
+@CRFPP  = ENV['CRFPP_HOME'] ? "#{ENV['CRFPP_HOME']}/bin" : "#{pwd}/../../crfpp"
 @SRC    = "#{pwd}/genericSect"
 @DATA   = "#{pwd}/../../resources/sectLabel/"
 @TEST_DIR = "/tmp/"
