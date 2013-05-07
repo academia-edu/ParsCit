@@ -33,8 +33,8 @@ use Getopt::Std;
 use strict 'vars';
 use lib $FindBin::Bin . "/../lib";
 
-use lib "/home/wing.nus/tools/languages/programming/perl-5.10.0/lib/5.10.0";
-use lib "/home/wing.nus/tools/languages/programming/perl-5.10.0/lib/site_perl/5.10.0";
+#use lib "/home/wing.nus/tools/languages/programming/perl-5.10.0/lib/5.10.0";
+#use lib "/home/wing.nus/tools/languages/programming/perl-5.10.0/lib/site_perl/5.10.0";
 
 # Dependencies
 use File::Spec;
@@ -42,6 +42,9 @@ use File::Basename;
 
 # Local libraries
 use ParsCit::Controller;
+
+use HeaderParse::API::Parser;
+use HeaderParse::Config::API_Config;
 	
 # USER customizable section
 my $tmpfile	.= $0; 
@@ -58,6 +61,7 @@ my $progname	= $1;
 my $PARSCIT		= 1;
 my $PARSHED		= 2;
 my $SECTLABEL	= 4; # Thang v100401
+my $SVM       = 8;
 
 my $default_input_type	= "raw";
 my $output_version		= "110505";
@@ -228,6 +232,14 @@ if (($mode & $PARSCIT) == $PARSCIT)
   if (scalar(@export_types) != 0) { BiblioScript(\@export_types, $$pc_xml, $out); }
 }
 
+# SVM HEADER PARSE
+if (($mode & $SVM) == $SVM)
+{
+  my $svm_xml = HeaderParse::API::Parser::extractHeader($text_file);
+
+  $rxml .= $$$svm_xml . "\n";
+}
+
 $rxml .= "</algorithms>";
 
 if (defined $out) 
@@ -267,7 +279,7 @@ sub ParseMode
 	} 
 	elsif ($arg eq "extract_header") 
 	{
-		return $PARSHED;
+		return ($PARSHED | $SECTLABEL | $SVM);
 	} 
 	elsif ($arg eq "extract_citations") 
 	{
@@ -279,7 +291,7 @@ sub ParseMode
 	} 
 	elsif ($arg eq "extract_all") 
 	{
-		return ($PARSHED | $PARSCIT | $SECTLABEL);
+		return ($PARSHED | $PARSCIT | $SECTLABEL | $SVM);
 	} 
 	else 
 	{
