@@ -1,4 +1,4 @@
-#!/opt/ActivePerl-5.8/bin/perl -CSD
+#!/usr/bin/perl -CSD
 #
 # Starts a web service using SOAP::Lite that handles requests
 # for citation parsing.  For message details, see the WSDL file
