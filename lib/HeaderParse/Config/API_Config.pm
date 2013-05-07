@@ -26,11 +26,17 @@ else {
   $Classifier = "svm_classify5"; # assume on path
 }
 
-$Resource_Dir = "resources/headerParse";
+my $path;
+BEGIN
+{
+	if ($FindBin::Bin =~ /(.*)/) { $path = $1; }
+}
+
+$Resource_Dir = "$path/../resources/headerParse";
 $Database_Dir = "$Resource_Dir/database/";
 $Data_Dir = "$Resource_Dir/data/";
 $offlineD = "$Resource_Dir/models/";
-$Tmp_Dir = "tmp";
+$Tmp_Dir = "$path/../tmp";
 
 $nMinHeaderLength = 50;
 $nMaxHeaderLength = 2500;
