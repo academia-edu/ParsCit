@@ -279,7 +279,7 @@ sub ParseMode
 	} 
 	elsif ($arg eq "extract_header") 
 	{
-		return ($PARSHED | $SECTLABEL | $SVM);
+		return ($PARSHED | $SVM);
 	} 
 	elsif ($arg eq "extract_citations") 
 	{
