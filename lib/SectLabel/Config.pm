@@ -5,7 +5,7 @@ $algorithmVersion	= "110505";
 
 ###
 # Tr2crfpp
-# Paths relative to SectLabel root dir ($FindBin::Bin/..)
+# Paths relative to SectLabel root dir
 ###
 $tmpDir			= "tmp";
 $dictFile		= "resources/parsCitDict.txt";

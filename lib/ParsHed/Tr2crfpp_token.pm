@@ -10,22 +10,19 @@ package ParsHed::Tr2crfpp_token;
 
 use strict 'vars';
 use utf8;
-use FindBin;
 use ParsHed::Config;
 use Encode ();
 
 ### USER customizable section
 
-my $tmpDir = $ParsHed::Config::tmpDir;
-$tmpDir = "$FindBin::Bin/../$tmpDir";
+use File::Basename;
+my $dir = dirname(__FILE__);
+my $parscitHome = "$dir/../../";
 
-my $dictFile = $ParsHed::Config::dictFile;
-$dictFile = "$FindBin::Bin/../$dictFile";
-
-my $crf_test = $ENV{'CRFPP_HOME'} ? "$ENV{'CRFPP_HOME'}/bin/crf_test" : "$FindBin::Bin/../$ParsHed::Config::crf_test";
-
-my $modelFile = $ParsHed::Config::oldModelFile;
-$modelFile = "$FindBin::Bin/../$modelFile";
+my $tmpDir = "$parscitHome/$ParsHed::Config::tmpDir";
+my $dictFile = "$parscitHome/$ParsHed::Config::dictFile";
+my $crf_test = $ENV{'CRFPP_HOME'} ? "$ENV{'CRFPP_HOME'}/bin/crf_test" : "$parscitHome/$ParsHed::Config::crf_test";
+my $modelFile = "$parscitHome/$ParsHed::Config::oldModelFile";
 
 ### END user customizable section
 

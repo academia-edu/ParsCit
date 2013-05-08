@@ -17,7 +17,9 @@ require 'dumpvar.pl';
 use strict;
 
 # Dependencies
-use FindBin;
+use File::Basename;
+my $dir = dirname(__FILE__);
+my $parscitHome = "$dir/../../";
 
 # Local libraries
 use SectLabel::Config;
@@ -25,7 +27,7 @@ use SectLabel::Tr2crfpp;
 use SectLabel::PostProcess;
 use CSXUtil::SafeText qw(cleanXML);
 
-my $generic_sect_path = $FindBin::Bin . "/sectLabel/genericSectExtract.rb";
+my $generic_sect_path = $parscitHome . "bin/sectLabel/genericSectExtract.rb";
 
 ###
 # Main API method for generating an XML document including all

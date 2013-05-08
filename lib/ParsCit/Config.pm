@@ -15,7 +15,7 @@ $serverPort	= 10555;
 $URI		= 'http://citeseerx.org/algorithms/parscit/wsdl';
 
 ## Tr2crfpp
-## Paths relative to ParsCit root dir ($FindBin::Bin/..)
+## Paths relative to ParsCit root dir
 $tmpDir		= "tmp";
 $dictFile	= "resources/parsCitDict.txt";
 $crf_test = $ENV{'CRFPP_HOME'} ? "$ENV{'CRFPP_HOME'}/bin/crf_test" : "crfpp/crf_test";

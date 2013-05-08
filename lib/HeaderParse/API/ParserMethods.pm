@@ -17,7 +17,6 @@ package HeaderParse::API::ParserMethods;
 
 use utf8;
 use Data::Dumper;
-use FindBin;
 use HeaderParse::API::NamePatternMatch;
 use HeaderParse::API::MultiClassChunking; #default to use all export by this module
 use HeaderParse::API::LoadInformation;

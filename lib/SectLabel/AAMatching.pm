@@ -21,10 +21,14 @@ use	Class::Struct;
 use SectLabel::Config;
 use ParsCit::PostProcess;
 
+use File::Basename;
+my $dir = dirname(__FILE__);
+my $parscitHome = "$dir/../../";
+
 # Dictionary
 my %dict = ();
 # CRF++
-my $crft = $ENV{'CRFPP_HOME'} ? "$ENV{'CRFPP_HOME'}/bin/crf_test" : "$FindBin::Bin/../$SectLabel::Config::crf_test";
+my $crft = $ENV{'CRFPP_HOME'} ? "$ENV{'CRFPP_HOME'}/bin/crf_test" : "$parscitHome/$SectLabel::Config::crf_test";
 
 # Matching features of each author, including
 # Signals
@@ -77,7 +81,7 @@ sub AAMatching
 	my $aff_lines	= Omni::Traversal::OmniCollector($doc, $aff_addrs, $need_object);
 	
 	# Dictionary
-	ReadDict($FindBin::Bin . "/../" . $SectLabel::Config::dictFile);
+	ReadDict($parscitHome . $SectLabel::Config::dictFile);
 
 	# Authors
 	my ($aut_features, $aut_rc_features) = AuthorFeatureExtraction($aut_lines, $aut_addrs);

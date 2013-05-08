@@ -13,14 +13,16 @@ use utf8;
 use strict 'vars';
 
 # Dependencies
-use FindBin;
 use Encode ();
+use File::Basename;
+my $dir = dirname(__FILE__);
+my $parscitHome = "$dir/../../";
 
 # Local libraries
 use SectLabel::Config;
 
 ### USER customizable section
-my $crf_test	= $ENV{'CRFPP_HOME'} ? "$ENV{'CRFPP_HOME'}/bin/crf_test" : "$FindBin::Bin/../$SectLabel::Config::crf_test";
+my $crf_test	= $ENV{'CRFPP_HOME'} ? "$ENV{'CRFPP_HOME'}/bin/crf_test" : "$parscitHome/$SectLabel::Config::crf_test";
 ### END user customizable section
 
 my %dict		= ();

@@ -12,7 +12,6 @@
 #
 package HeaderParse::Config::API_Config;
 
-use FindBin qw($Bin);
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
 
@@ -26,17 +25,15 @@ else {
   $Classifier = "svm_classify5"; # assume on path
 }
 
-my $path;
-BEGIN
-{
-	if ($FindBin::Bin =~ /(.*)/) { $path = $1; }
-}
+use File::Basename;
+my $dir = dirname(__FILE__);
+my $parscitHome = "$dir/../../../";
 
-$Resource_Dir = "$path/../resources/headerParse";
+$Resource_Dir = "$parscitHome/resources/headerParse";
 $Database_Dir = "$Resource_Dir/database/";
 $Data_Dir = "$Resource_Dir/data/";
 $offlineD = "$Resource_Dir/models/";
-$Tmp_Dir = "$path/../tmp";
+$Tmp_Dir = "$parscitHome/tmp";
 
 $nMinHeaderLength = 50;
 $nMaxHeaderLength = 2500;

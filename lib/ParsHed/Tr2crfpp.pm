@@ -10,28 +10,31 @@ package ParsHed::Tr2crfpp;
 
 use strict 'vars';
 use utf8;
-use FindBin;
 use ParsHed::Config;
 use Encode ();
+
+use File::Basename;
+my $dir = dirname(__FILE__);
+my $parscitHome = "$dir/../../";
 
 ### USER customizable section
 
 my $tmpDir = $ParsHed::Config::tmpDir;
-$tmpDir = "$FindBin::Bin/../$tmpDir";
+$tmpDir = "$parscitHome/$tmpDir";
 
 my $dictFile = $ParsHed::Config::dictFile;
-$dictFile = "$FindBin::Bin/../$dictFile";
+$dictFile = "$parscitHome/$dictFile";
 
 my $keywordFile = $ParsHed::Config::keywordFile;
-$keywordFile = "$FindBin::Bin/../$keywordFile";
+$keywordFile = "$parscitHome/$keywordFile";
 
 my $bigramFile = $ParsHed::Config::bigramFile;
-$bigramFile = "$FindBin::Bin/../$bigramFile";
+$bigramFile = "$parscitHome/$bigramFile";
 
-my $crf_test = $ENV{'CRFPP_HOME'} ? "$ENV{'CRFPP_HOME'}/bin/crf_test" : "$FindBin::Bin/../$ParsHed::Config::crf_test";
+my $crf_test = $ENV{'CRFPP_HOME'} ? "$ENV{'CRFPP_HOME'}/bin/crf_test" : "$parscitHome/$ParsHed::Config::crf_test";
 
 my $modelFile = $ParsHed::Config::modelFile;
-$modelFile = "$FindBin::Bin/../$modelFile";
+$modelFile = "$parscitHome/$modelFile";
 
 ### END user customizable section
 

@@ -12,25 +12,20 @@ package ParsCit::Tr2crfpp;
 use utf8;
 use strict 'vars';
 
-use FindBin;
 use Encode ();
 
 use ParsCit::Config;
 
+use File::Basename;
+my $dir = dirname(__FILE__);
+my $parscitHome = "$dir/../../";
+
 ### USER customizable section
-my $tmp_dir		= $ParsCit::Config::tmpDir;
-$tmp_dir		= "$FindBin::Bin/../$tmp_dir";
-
-my $dict_file	= $ParsCit::Config::dictFile;
-$dict_file		= "$FindBin::Bin/../$dict_file";
-
-my $crf_test	= $ENV{'CRFPP_HOME'} ? "$ENV{'CRFPP_HOME'}/bin/crf_test" : "$FindBin::Bin/../$ParsCit::Config::crf_test";
-
-my $model_file	= $ParsCit::Config::modelFile;
-$model_file		= "$FindBin::Bin/../$model_file";
-
-my $split_model_file	= $ParsCit::Config::splitModelFile;
-$split_model_file		= "$FindBin::Bin/../$split_model_file";
+my $tmp_dir		= "$parscitHome/$ParsCit::Config::tmpDir";
+my $dict_file	= "$parscitHome/$ParsCit::Config::dictFile";
+my $crf_test	= $ENV{'CRFPP_HOME'} ? "$ENV{'CRFPP_HOME'}/bin/crf_test" : "$parscitHome/$ParsCit::Config::crf_test";
+my $model_file	= "$parscitHome/$ParsCit::Config::modelFile";
+my $split_model_file	= "$parscitHome/$ParsCit::Config::splitModelFile";
 ### END user customizable section
 
 ###
