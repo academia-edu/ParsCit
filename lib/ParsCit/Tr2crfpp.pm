@@ -982,8 +982,8 @@ sub BuildTmpFile
 	###
 	# Altered by Min (Thu Feb 28 13:08:59 SGT 2008)
 	###
-    return "/tmp/$tmpfile"; 
-    # return $tmpfile;
+    my $tmpdir = $ENV{'PARSCIT_TMPDIR'} || "/tmp";
+    return "$tmpdir/$tmpfile";
 }
 
 sub Fatal 

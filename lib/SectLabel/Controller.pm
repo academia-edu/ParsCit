@@ -212,7 +212,7 @@ sub GetGenericHeaders
 	my $num_headers = scalar(@{ $headers });
 
 	# Put the list of headers to file
-  	my $header_file = "/tmp/" . NewTmpFile();
+  my $header_file = NewTmpFile();
 
   	$generic_sect_path = UntaintPath($generic_sect_path);
 	
@@ -328,7 +328,9 @@ sub NewTmpFile
 
 	chomp($tmpfile);
 	$tmpfile = UntaintPath($tmpfile);
-	return $tmpfile;
+
+  my $tmpdir = $ENV{'PARSCIT_TMPDIR'} || "/tmp";
+	return "$tmpdir/$tmpfile";
 }
 
 1;

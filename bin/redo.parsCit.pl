@@ -5,7 +5,8 @@
 my $tmpfile .= $0; $tmpfile =~ s/[\.\/]//g;
 $tmpfile .= $$ . time;
 if ($tmpfile =~ /^([-\@\w.]+)$/) { $tmpfile = $1; }		      # untaint tmpfile variable
-$tmpfile = "/tmp/" . $tmpfile;
+my $tmpdir = $ENV{'PARSCIT_TMPDIR'} || "/tmp";
+$tmpfile = "$tmpdir/$tmpfile";
 $0 =~ /([^\/]+)$/; my $progname = $1;
 my $outputVersion = "1.0";
 my $parscitHome = "/home/wing.nus/services/parscit/tools/";

@@ -33,7 +33,7 @@ $Resource_Dir = "$parscitHome/resources/headerParse";
 $Database_Dir = "$Resource_Dir/database/";
 $Data_Dir = "$Resource_Dir/data/";
 $offlineD = "$Resource_Dir/models/";
-$Tmp_Dir = "$parscitHome/tmp";
+$Tmp_Dir = $ENV{'PARSCIT_TMPDIR'} || "/tmp";
 
 $nMinHeaderLength = 50;
 $nMaxHeaderLength = 2500;

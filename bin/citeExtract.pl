@@ -53,8 +53,8 @@ $tmpfile	.= $$ . time;
 
 # Untaint tmpfile variable
 if ($tmpfile =~ /^([-\@\w.]+)$/) { $tmpfile = $1; }
-
-$tmpfile		= "/tmp/" . $tmpfile;
+my $tmpdir = $ENV{'PARSCIT_TMPDIR'} || "/tmp";
+$tmpfile		= "$tmpdir/$tmpfile";
 $0				=~ /([^\/]+)$/;
 my $progname	= $1;
 
@@ -379,7 +379,8 @@ sub BiblioScript
 	my ($types, $pc_xml, $outfile) = @_;
 
 	my @export_types	= @{ $types };
-	my $tmp_dir			= "/tmp/" . NewTmpFile();
+  my $base_tmp_dir = $ENV{'PARSCIT_TMPDIR'} || "/tmp";
+	my $tmp_dir			= $base_tmp_dir . "/" . NewTmpFile();
 	system("mkdir -p $tmp_dir");
 
 	# Write extract_citation output to a tmp file
