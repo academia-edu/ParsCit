@@ -86,7 +86,7 @@ sub Help
 	print STDERR "\t-q\tQuiet Mode (don't echo license)\n";
 
 	# Thang v100401: add new mode (extract_section), and -i <inputType>
-	print STDERR "\t-m <mode>	   \tMode (extract_citations, extract_header, extract_section, extract_meta, extract_all, default: extract_citations)\n";
+	print STDERR "\t-m <mode>	   \tMode (extract_citations, extract_header, extract_header_svm_only, extract_header_crf_only, extract_section, extract_meta, extract_all, default: extract_citations)\n";
 	print STDERR "\t-i <inputType> \tType (raw, xml, default: raw)\n";
 	print STDERR "\t-e <exportType>\tExport citations into multiple types (ads|bib|end|isi|ris|wordbib). Multiple types could be specified by contatenating with \"-\" e.g., bib-end-ris. Output files will be named as outfile.exportFormat, with outfile being the input argument, and exportFormat being each individual format supplied by -e option.\n";
 	print STDERR "\t-t\tUse token level model instead\n";
@@ -281,6 +281,14 @@ sub ParseMode
 	{
 		return ($PARSHED | $SVM);
 	} 
+  elsif ($arg eq "extract_header_svm_only")
+  {
+    return $SVM;
+  }
+  elsif ($arg eq "extract_header_crf_only")
+  {
+    return $PARSHED;
+  }
 	elsif ($arg eq "extract_citations") 
 	{
 		return $PARSCIT;
