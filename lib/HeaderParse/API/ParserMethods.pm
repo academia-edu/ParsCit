@@ -17,6 +17,8 @@ package HeaderParse::API::ParserMethods;
 
 use utf8;
 use Data::Dumper;
+use File::Temp qw(tempdir);
+use File::Path qw(remove_tree);
 use HeaderParse::API::NamePatternMatch;
 use HeaderParse::API::MultiClassChunking; #default to use all export by this module
 use HeaderParse::API::LoadInformation;
@@ -83,9 +85,10 @@ sub Parse{
     my $header=shift;
     $timestamp = shift;
     my $success = 0;
-    my $tmpCacheVec = "$Tmp_Dir/tmpVec"."\_$timestamp\_";
+    my $Local_Tmpdir = tempdir(DIR => $Tmp_Dir, CLEANUP => 1);
+    my $tmpCacheVec = "$Local_Tmpdir/tmpVec"."\_$timestamp\_";
 
-    my $SVMTmpResult = "$Tmp_Dir/tmpresult"."\_$timestamp\_";
+    my $SVMTmpResult = "$Local_Tmpdir/tmpresult"."\_$timestamp\_";
     $TestH = &HashEbizHeader(\$header);
     $TestH = &VectorizeUnknownHeaderLine($TestH);
 
@@ -124,10 +127,7 @@ sub Parse{
     }
     $rXML = &ExportRDF($TestH);
 
-    for my $i(1..15){
-	unlink "$Tmp_Dir/tmpVec\_$timestamp\_test$i";
-	unlink "$Tmp_Dir/tmpresult\_$timestamp\_$i";
-    }
+    remove_tree($Local_Tmpdir);
     return $rXML;
 }
 
@@ -414,6 +414,7 @@ sub LineClassify() {
     for my $clsNO(1 .. 15) {
 	my $testF = "$tmpCacheVec"."test"."$clsNO";
 	open(testFH, ">$testF") || die "SVMHeaderParse: could not open $testF to write: $!";
+
 	#      foreach my $HeaNO (sort {$a <=> $b} keys %{$HeaderH}) {
 	foreach my $LN(sort {$a <=> $b} keys %{$HeaderH}) {
 	    my $tag = 1; # just to conform to the format
