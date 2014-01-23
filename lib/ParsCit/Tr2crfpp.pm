@@ -12,6 +12,7 @@ package ParsCit::Tr2crfpp;
 use utf8;
 use strict 'vars';
 
+use FindBin;
 use Encode ();
 
 use ParsCit::Config;
@@ -26,12 +27,11 @@ $dict_file		= "$FindBin::Bin/../$dict_file";
 my $crf_test	= $ParsCit::Config::crf_test;
 $crf_test		= "$FindBin::Bin/../$crf_test";
 
-### USER customizable section
-my $tmp_dir		= "$parscitHome/$ParsCit::Config::tmpDir";
-my $dict_file	= "$parscitHome/$ParsCit::Config::dictFile";
-my $crf_test	= $ENV{'CRFPP_HOME'} ? "$ENV{'CRFPP_HOME'}/bin/crf_test" : "$parscitHome/$ParsCit::Config::crf_test";
-my $model_file	= "$parscitHome/$ParsCit::Config::modelFile";
-my $split_model_file	= "$parscitHome/$ParsCit::Config::splitModelFile";
+my $model_file = $ParsCit::Config::modelFile;
+$model_file            = "$FindBin::Bin/../$model_file";
+
+my $split_model_file   = $ParsCit::Config::splitModelFile;
+$split_model_file              = "$FindBin::Bin/../$split_model_file";
 ### END user customizable section
 
 ###
