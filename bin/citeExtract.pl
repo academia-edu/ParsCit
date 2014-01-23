@@ -33,6 +33,7 @@ use Getopt::Std;
 use strict 'vars';
 use lib $FindBin::Bin . "/../lib";
 
+use lib "/home/huydhn/perl5/lib";
 use lib "/home/wing.nus/tools/languages/programming/perl-5.10.0/lib/5.10.0";
 use lib "/home/wing.nus/tools/languages/programming/perl-5.10.0/lib/site_perl/5.10.0";
 
@@ -45,7 +46,8 @@ use Omni::Omnidoc;
 use Omni::Traversal;
 use ParsCit::Controller;
 use SectLabel::AAMatching;
-	
+use ParsCit::PreProcess;
+
 # USER customizable section
 my $tmpfile	.= $0; 
 $tmpfile	=~ s/[\.\/]//g;
@@ -136,6 +138,11 @@ my $ph_model	= (defined $opt_t) ? 1 : 0;
 
 my $in		= shift;	# input file
 my $out		= shift;	# if available
+
+# Convert line endings from Mac style, if so
+# Canocicalizes carriage return, line feed characters 
+# at line ending
+ParsCit::PreProcess::canolicalizeEOL($in);
 
 # Output buffer
 my $rxml	= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<algorithms version=\"" . $output_version . "\">\n";
@@ -318,6 +325,7 @@ if (($mode & $PARSHED) == $PARSHED)
 # PARSCIT
 if (($mode & $PARSCIT) == $PARSCIT)
 {
+    my ($all_text, $cit_lines);
 	if ($is_xml_input)
 	{
 		my $cmd	= $FindBin::Bin . "/sectLabel/processOmniXMLv3.pl -q -in $in -out $text_file.feature -decode";
@@ -350,7 +358,7 @@ if (($mode & $PARSCIT) == $PARSCIT)
 
 		my $sect_label_input = $text_file . ".feature";
 		# Output of sectlabel becomes input for parscit
-		my ($all_text, $cit_lines) = SectLabel($sect_label_input, $is_xml_input, 1);	
+		($all_text, $cit_lines) = SectLabel($sect_label_input, $is_xml_input, 1);	
 		# Remove XML feature file
 		unlink($sect_label_input);
 
@@ -370,8 +378,17 @@ if (($mode & $PARSCIT) == $PARSCIT)
 	}
 	else
 	{
-		my $pc_xml = ParsCit::Controller::ExtractCitations($text_file, $in, $is_xml_input);
-	
+
+        # Issue 13 resolution : Rerouting SectLabel Output to ParsCit - Ankur #
+
+		#my $pc_xml = ParsCit::Controller::ExtractCitations($text_file, $in, $is_xml_input);
+
+		($all_text, $cit_lines) = SectLabel($text_file, $is_xml_input, 1);
+        my $cit_addrs = 0;
+		my $pc_xml = ParsCit::Controller::ExtractCitations2(\$all_text, $cit_lines, $is_xml_input, $doc, $cit_addrs);
+
+        #----------------------------
+
 		# Remove first line <?xml/> 
 		$rxml .= RemoveTopLines($$pc_xml, 1) . "\n";
 
@@ -400,8 +417,11 @@ if ($is_xml_input)
 	if (($mode & $PARSCIT) == $PARSCIT) 
 	{ 
 		# Get the normal .body .cite files
-		system("mv $text_file.body $in.body");
-		system("mv $text_file.cite $in.cite");
+        my $filename = $text_file . ".body";
+        if(-e $filename){
+            system("mv $text_file.body $in.body");
+            system("mv $text_file.cite $in.cite");
+        }
 	}
 
 	unlink($text_file);

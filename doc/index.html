@@ -49,7 +49,7 @@ tasks: 1) reference string parsing, sometimes also called citation
 parsing or citation extraction, and 2) logical structure parsing of
 scienfific documents.  It is architected as a supervised machine
 learning procedure that uses Conditional Random Fields as its learning
-mechanism.  You can download the code below, parse strings online, or
+mechanism. You can download the code below, parse strings online, or
 send batch jobs to our web service.  The code contains both the
 training data, feature generator and shell scripts to connect the
 system to a web service (used on this web site).</P>
@@ -87,6 +87,18 @@ task is handled by a module with the project namesake, ParsCit, and
 the second task by a separate module SectLabel.
 </P>
 
+<h4> Extracting and Matching Authors and Affiliations in
+Scholarly Documents</h4>
+<P>We introduce <B>Enlil</B>, an information extraction system that discovers
+the institutional affiliations of authors in scholarly papers. Enlil
+consists of two steps: one that first identifies authors and affiliations
+using a conditional random field; and a second support vector
+machine that connects authors to their affiliations. Enlil relies on the SectLabel 
+for its input. It collects all reported author and affiliation lines from SectLabel
+for processing.
+</P>
+<!--<P> Our latest version of Parscit that is available for download includes Enlil. </P>-->
+
 <br clear="all"/>
 <!-- License ---------------------------------------------------------------------- -->
 <A NAME="l"></A><H2>License</H2>
@@ -107,7 +119,7 @@ using <CODE>perl</CODE> (must be in your path).
 
 <ul>
 
-  <li> Current version <A HREF="parscit-110505b.zip">110505b</A>: Added XML::Twig for XML processing. ParsCit now uses input provided by SectLabel. See <A HREF="CHANGELOG.txt"> CHANGELOG.txt </A>.<BR/>
+  <li> Current version <A HREF="parscit-130908.zip">130908</A><BR>
   The (partially ported) <A HREF="parscit-110505b-win.zip">Windows</A> version is here (provided by Yumichika).  See the <A HREF="CHANGES%20FOR%20WINDOWS.txt">CHANGES FOR WINDOWS.txt</A>
 <BR/>
   <BR/> 
@@ -117,6 +129,7 @@ using <CODE>perl</CODE> (must be in your path).
   While we'll strive to keep the GitHub version as updated as possible, the versions on this page will remain the most authoritative for major updates. 
   <BR/>
   <li> Other versions: <BR/>
+<A HREF="parscit-110505b.zip">110505b</A>: Added XML::Twig for XML processing. ParsCit now uses input provided by SectLabel. See <A HREF="CHANGELOG.txt">CHANGELOG.txt </A>.<BR/>  
 <A HREF="parscit-101101.zip">101101</A>: Incorporated <A HREF="http://github.com/mromanello/BiblioScript">BiblioScript</A> and <A HREF=http://www.scripps.edu/~cdputnam/software/bibutils>BibUtils</A> software. See CHANGELOG.txt; <BR/> 
 <A HREF="parscit-100401.zip">100401d</A>: Added SectLabel (logical structure parsing) software from the NUS team, and Iconip training data from Cheong Chi Hong for ParsCit with new ParsCit model retrained. See CHANGELOG.txt; <BR/> 
 <A HREF="parscit-090625.zip">090625b</A>: Added documentation for complete re-installation. Improved ParsHed with added line-level CRF model together and post-processing module by NUS team, WSDL file and client for service at NUS and minor bug fixes for ParsCit. See CHANGELOG.txt; <BR/>
@@ -315,14 +328,22 @@ HREF="http://wing.comp.nus.edu.sg/~wing.nus/samples/W06-0102.cite">http://wing.c
 <A name="p"></a><H2>Publications</H2>
 <P><B>Journal Papers:</B>
 <UL>
-  <LI> Minh-Thang Luong, Thuy Dung Nguyen and Min-Yen Kan (forthcoming)
+  <LI> Minh-Thang Luong, Thuy Dung Nguyen and Min-Yen Kan (2010)
        <U>Logical Structure Recovery in Scholarly Articles with Rich
-       Document Features</U>.  Forthcoming in the International
-       Journal of Digital Library Systems.  <BR/>
+       Document Features</U>. International
+       Journal of Digital Library Systems (IJDLS), 1(4), 1-23.  <BR/>
        [ <A HREF="ijdls-SectLabel.pdf">pre-print .pdf</A> ]
 </UL>
 
+
 <P><B>International Referreed Conference Publications:</B>
+<UL>
+  <LI> Huy Hoang Nhat Do, Muthu Kumar Chandrasekaran, Philip S. Cho, 
+	  and Min-Yen Kan.(2013) <U>Extracting and Matching Authors and Affiliations 
+	  in Scholarly Documents.</U>In Proceedings of the Thirteenth Annual International 
+	  ACM/IEEE Joint Conference on Digital Libraries (JCDL'13), Indianapolis: ACM. 2013. <BR/>
+	  [ <A HREF="jcdl2013.pdf">pre-print .pdf</A> ]
+</UL>
 <UL>
   <LI> Isaac G. Councill, C. Lee Giles, Min-Yen Kan. (2008)
        <U>ParsCit: An open-source CRF reference string parsing
@@ -378,6 +399,7 @@ HREF="http://wing.comp.nus.edu.sg/~wing.nus/samples/W06-0102.cite">http://wing.c
   <LI> Yong Kiat Ng - Final year undergraduate student (graduated, 2004), NUS
   <LI> Thuy Dung Nguyen - Research Assistant (alumnus), NUS
   <LI> Huy Nhat Hoang Do - Research Assistant, NUS
+  <LI> <A HREF="http://wing.comp.nus.edu.sg/~cmkumar">Muthu Kumar Chandrasekaran</A> - Research Assistant, NUS
 </UL>
 
 <!-- FAQ ---------------------------------------------------------------------- -->
@@ -594,6 +616,49 @@ $ mv model ../../resources/parsCit.model
     0.51 and place the libraries and the executables in the proper
     place. See the README for details.</DD>
 
+	<DT> I am trying to install CRF++(CRFPP).
+		 When I executed the following in the terminal,
+		 <BR><BR>
+		 <CODE>
+		 $ /opt/parscit2/bin/citeExtract.pl -m extract_all
+		 <BR>$ /var/www/internal/indra/uploads_batch/proses.txt
+		 <BR>$ /var/www/internal/indra/uploads_batch/hasiltemp.xml	
+		 </CODE>
+		 <BR><BR>the following error was thrown.
+		 <CODE>
+		 <BR>$ /opt/parscit2/crfpp/.libs/lt-crf_test: error while loading shared libraries:
+		 <BR>libcrfpp.so.0: cannot open shared object file: No such file or directory
+		</CODE>
+	</DT>
+	<DD> The file libcrfpp.so.0 is not in your library path. Normally, a successful 
+		reinstallation of CRF++ (following the instructions above) will also solve this 
+		problem. If it is still persists, you can try setting the LD_LIBRARY_PATH variable to the location of libcrfpp.so.0 file :
+		<BR>
+		<CODE>
+		$ export LD_LIBRARY_PATH=&lt;PATH-TO-LIBCRFPP.SO.0-FILE&gt;
+		</CODE>	
+	</DD>
+    <BR>
+	<DT>
+	      I get the following error message :
+		  <BR><BR>
+		      &nbsp;&nbsp;Can't locate XML/Twig.pm in @INC (@INC contains: ...)<BR>
+			  &nbsp;&nbsp;BEGIN failed&#45;-compilation aborted at ...<BR>
+			  &nbsp;&nbsp;Compilation failed in require at ...<BR>
+			  &nbsp;&nbsp;...<BR>
+	</DT>
+	<DD>
+	     This is because the Perl interpreter on your machine/server can't locate all the Perl modules required (XML::Twig in this case) 
+		 for ParsCit to function properly.<BR>
+		 <OL>
+		 	<LI> You will either have to install these modules from CPAN before running ParsCit. You can find a list of all the 
+				 required modules for ParsCit on <a href="https://github.com/knmnyn/ParsCit/blob/master/INSTALL">this</a> page.
+			<LI> In case you do have the required modules on the server, it is possible that the interpreter was not able to locate 
+			     these. In this case, you would have to update the list of paths that the interpreter searches to find the required modules. 
+				 This can be done by updating the environment variable PERL5LIB (for Perl5) or PERLLIB to include the path of the 
+				 installed modules.
+		</OL>
+	</DD>
 </DL>
 
 <!-- Kudos ---------------------------------------------------------------------- -->
@@ -636,7 +701,7 @@ MacOS.</p>
 
 <P>ParsCit is used by many projects worldwide, and not just in
 experimental, research and academic places, but in commercial
-snterprises as well.  <A HREF="http://www.mendeley.com/">Mendeley</A>
+enterprises as well.  <A HREF="http://www.mendeley.com/">Mendeley</A>
 is using ParsCit to parse references from contributed papers, as is
 the <A HREF="http://citec.repec.org/">Citations in Economics
 (CitEc)</A> project.
@@ -685,7 +750,7 @@ Created on: Fri Dec 24 01:48:05 SGT 2004
 | Version: 1.0
 
 | Last modified: 
-Mon Mar  4 14:23:46 SGT 2013
+Tue Jul 23 00:28:05 SGT 2013
 <!-- hhmts end -->
 </H5>
 </div>
