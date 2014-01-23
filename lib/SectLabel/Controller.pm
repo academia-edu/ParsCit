@@ -176,7 +176,7 @@ sub ExtractSectionImpl
       		$xml = InsertGenericHeaders($xml, $section_headers{ "header" }, $section_headers{ "generic" }, $section_headers{ "lineId" });
     	}
  	}
-	
+
 	###
 	# Huydhn: provide input for parscit
 	###

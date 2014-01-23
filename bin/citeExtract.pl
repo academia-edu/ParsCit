@@ -33,6 +33,7 @@ use Getopt::Std;
 use strict 'vars';
 use lib $FindBin::Bin . "/../lib";
 
+#use lib "/home/huydhn/perl5/lib";
 #use lib "/home/wing.nus/tools/languages/programming/perl-5.10.0/lib/5.10.0";
 #use lib "/home/wing.nus/tools/languages/programming/perl-5.10.0/lib/site_perl/5.10.0";
 
@@ -46,6 +47,9 @@ use ParsCit::Controller;
 use HeaderParse::API::Parser;
 use HeaderParse::Config::API_Config;
 	
+use SectLabel::AAMatching;
+use ParsCit::PreProcess;
+
 # USER customizable section
 my $tmpfile	.= $0; 
 $tmpfile	=~ s/[\.\/]//g;
@@ -138,6 +142,11 @@ my $ph_model	= (defined $opt_t) ? 1 : 0;
 my $in		= shift;	# input file
 my $out		= shift;	# if available
 
+# Convert line endings from Mac style, if so
+# Canocicalizes carriage return, line feed characters 
+# at line ending
+ParsCit::PreProcess::canolicalizeEOL($in);
+
 # Output buffer
 my $rxml	= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<algorithms version=\"" . $output_version . "\">\n";
 
@@ -227,9 +236,6 @@ if (($mode & $PARSCIT) == $PARSCIT)
 
   # Remove first line <?xml/> 
   $rxml .= RemoveTopLines($$pc_xml, 1) . "\n";
-
-  # Thang v100901: call to BiblioScript
-  if (scalar(@export_types) != 0) { BiblioScript(\@export_types, $$pc_xml, $out); }
 }
 
 # SVM HEADER PARSE
@@ -260,8 +266,11 @@ if ($is_xml_input)
 	if (($mode & $PARSCIT) == $PARSCIT) 
 	{ 
 		# Get the normal .body .cite files
-		system("mv $text_file.body $in.body");
-		system("mv $text_file.cite $in.cite");
+        my $filename = $text_file . ".body";
+        if(-e $filename){
+            system("mv $text_file.body $in.body");
+            system("mv $text_file.cite $in.cite");
+        }
 	}
 
 	unlink($text_file);

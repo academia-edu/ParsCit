@@ -16,9 +16,15 @@ use Encode ();
 
 use ParsCit::Config;
 
-use File::Basename;
-my $dir = dirname(__FILE__);
-my $parscitHome = "$dir/../../";
+### USER customizable section
+my $tmp_dir		= $ParsCit::Config::tmpDir;
+$tmp_dir		= "$FindBin::Bin/../$tmp_dir";
+
+my $dict_file	= $ParsCit::Config::dictFile;
+$dict_file		= "$FindBin::Bin/../$dict_file";
+
+my $crf_test	= $ParsCit::Config::crf_test;
+$crf_test		= "$FindBin::Bin/../$crf_test";
 
 ### USER customizable section
 my $tmp_dir		= "$parscitHome/$ParsCit::Config::tmpDir";

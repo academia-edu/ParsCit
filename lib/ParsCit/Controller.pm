@@ -214,6 +214,17 @@ sub ExtractCitationsImpl
 
     if (! defined $bwrite_split) { $bwrite_split = $ParsCit::Config::bWriteSplit; }
 
+  	if (!open (IN, "<:utf8", $textfile)) { return (-1, "Could not open text file $textfile: $!"); }
+  	while (<IN>) 
+	{
+		
+    	chomp;
+		# Remove ^M character at the end of the file if any
+		s/\cM$//; 
+
+  	}
+  	close IN;
+
 	# Status and error message initialization
     my ($status, $msg) = (1, "");
 	
@@ -394,9 +405,10 @@ sub ExtractCitationsImpl2
 		
 		# Prepare to split unmarked reference portion
 		my $tmp_file = ParsCit::Tr2crfpp::PrepDataUnmarked($doc, $cit_addrs);
-
 		# Extract citations from citation text
 	    $rraw_citations	= ParsCit::PreProcess::SegmentCitationsXML($rcite_text, $tmp_file);
+		# Remove the temporary file
+		unlink $tmp_file;
 	}
 	else
 	{
@@ -468,7 +480,7 @@ sub ExtractCitationsImpl2
 		    		$marker = $citation->buildAuthYearMarker();
 		    		$citation->setMarker($marker);
 				}
-				
+
 				###
 				# Modified by Nick Friedrich$ref_lines->[ 0 ]
 				### getCitationContext returns contexts and the position of the contexts
